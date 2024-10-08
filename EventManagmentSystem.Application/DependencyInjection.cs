@@ -1,4 +1,5 @@
 ﻿using EventManagmentSystem.Application.Services.Auth;
+using EventManagmentSystem.Application.Services.EmailService;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace EventManagmentSystem.Application
@@ -12,6 +13,7 @@ namespace EventManagmentSystem.Application
 
             //Register Services
             services.AddScoped<IAuthService, AuthService>();
+            services.AddSingleton<IEmailService, GmailEmailService>();
 
             return services;
         }

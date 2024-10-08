@@ -108,6 +108,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
             modelBuilder.Entity("EventManagmentSystem.Domain.Models.Event", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("Category")
@@ -121,6 +122,20 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                     b.Property<DateTime>("EndDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("EventType")
+                        .HasColumnType("integer");
+
+                    b.Property<string>("ImageUrl")
+                        .HasColumnType("text");
+
+                    b.Property<string>("Latitude")
+                        .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("Longitude")
+                        .IsRequired()
+                        .HasColumnType("text");
+
                     b.Property<string>("OrganizerId")
                         .IsRequired()
                         .HasColumnType("text");
@@ -128,8 +143,14 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                     b.Property<DateTime>("StartDate")
                         .HasColumnType("timestamp with time zone");
 
+                    b.Property<int>("Status")
+                        .HasColumnType("integer");
+
                     b.Property<string>("Title")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<string>("VideoUrl")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -142,6 +163,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
             modelBuilder.Entity("EventManagmentSystem.Domain.Models.Organization", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("AdminUserId")
@@ -189,10 +211,10 @@ namespace EventManagmentSystem.Infrastructure.Migrations
             modelBuilder.Entity("EventManagmentSystem.Domain.Models.Ticket", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("EventId")
@@ -207,6 +229,12 @@ namespace EventManagmentSystem.Infrastructure.Migrations
 
                     b.Property<string>("Type")
                         .IsRequired()
+                        .HasColumnType("text");
+
+                    b.Property<bool>("isGift")
+                        .HasColumnType("boolean");
+
+                    b.Property<string>("ticketSender")
                         .HasColumnType("text");
 
                     b.HasKey("Id");
@@ -391,9 +419,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                 {
                     b.HasOne("EventManagmentSystem.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Tickets")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("EventManagmentSystem.Domain.Models.Event", "Event")
                         .WithMany("Tickets")

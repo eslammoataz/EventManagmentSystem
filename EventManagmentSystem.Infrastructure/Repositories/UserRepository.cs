@@ -6,14 +6,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EventManagmentSystem.Infrastructure.Repositories
 {
-    public class UserRepo : IUserRepo
+    public class UserRepository : IUserRepository
     {
         private readonly ApplicationDbContext _context;
         private readonly UserManager<ApplicationUser> _userManager;
-        public UserRepo(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
+        public UserRepository(ApplicationDbContext context, UserManager<ApplicationUser> userManager)
         {
             _context = context;
             _userManager = userManager;
+        }
+
+        public async Task<IEnumerable<ApplicationUser>> GetAllAsync()
+        {
+            return await _context.Users.ToListAsync();
         }
 
         // Retrieve a user by their phone number
@@ -74,6 +79,33 @@ namespace EventManagmentSystem.Infrastructure.Repositories
 
             return user;
         }
+
+
+        public async Task<ApplicationUser> GetByIdAsync(string id)
+        {
+            return await _userManager.FindByIdAsync(id);
+        }
+
+        public async Task<ApplicationUser> GetByEmailAsync(string email)
+        {
+            return await _userManager.FindByEmailAsync(email);
+        }
+
+        public async Task<ApplicationUser> GetByUserNameAsync(string userName)
+        {
+            return await _userManager.FindByNameAsync(userName);
+        }
+
+        public async Task UpdateAsync(ApplicationUser user)
+        {
+            await _userManager.UpdateAsync(user);
+        }
+
+        public async Task DeleteAsync(ApplicationUser user)
+        {
+            await _userManager.DeleteAsync(user);
+        }
+
 
     }
 }

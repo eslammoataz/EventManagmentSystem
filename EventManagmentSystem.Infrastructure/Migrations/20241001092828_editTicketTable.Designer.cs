@@ -12,8 +12,8 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EventManagmentSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240924043948_OTPTable")]
-    partial class OTPTable
+    [Migration("20241001092828_editTicketTable")]
+    partial class editTicketTable
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -111,6 +111,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
             modelBuilder.Entity("EventManagmentSystem.Domain.Models.Event", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("Category")
@@ -145,6 +146,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
             modelBuilder.Entity("EventManagmentSystem.Domain.Models.Organization", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("AdminUserId")
@@ -192,10 +194,10 @@ namespace EventManagmentSystem.Infrastructure.Migrations
             modelBuilder.Entity("EventManagmentSystem.Domain.Models.Ticket", b =>
                 {
                     b.Property<string>("Id")
+                        .ValueGeneratedOnAdd()
                         .HasColumnType("text");
 
                     b.Property<string>("ApplicationUserId")
-                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("EventId")
@@ -394,9 +396,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                 {
                     b.HasOne("EventManagmentSystem.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Tickets")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("EventManagmentSystem.Domain.Models.Event", "Event")
                         .WithMany("Tickets")

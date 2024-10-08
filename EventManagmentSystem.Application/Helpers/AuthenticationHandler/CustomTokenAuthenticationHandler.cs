@@ -13,7 +13,7 @@ namespace EventManagmentSystem.Application.Helpers.AuthenticationHandler
     public class CustomTokenAuthenticationHandler : AuthenticationHandler<AuthenticationSchemeOptions>
     {
         private readonly UserManager<ApplicationUser> _userManager;
-        private readonly IUserRepo _userRepo;
+        private readonly IUserRepository _userRepo;
 
         public CustomTokenAuthenticationHandler(
             IOptionsMonitor<AuthenticationSchemeOptions> options,
@@ -21,7 +21,7 @@ namespace EventManagmentSystem.Application.Helpers.AuthenticationHandler
             UrlEncoder encoder,
             ISystemClock clock,
             UserManager<ApplicationUser> userManager,
-            IUserRepo userRepo)
+            IUserRepository userRepo)
             : base(options, logger, encoder, clock)
         {
             _userManager = userManager;

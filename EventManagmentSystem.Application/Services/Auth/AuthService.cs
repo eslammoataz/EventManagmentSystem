@@ -12,13 +12,13 @@ namespace EventManagmentSystem.Application.Services.Auth
     {
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly IAuthRepo _authRepo;
-        private readonly IUserRepo _userRepo;
+        private readonly IUserRepository _userRepo;
         private readonly ILogger<AuthService> _logger;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             IAuthRepo authRepo,
-            IUserRepo userRepo,
+            IUserRepository userRepo,
             ILogger<AuthService> logger)
         {
             _userManager = userManager;
@@ -29,11 +29,11 @@ namespace EventManagmentSystem.Application.Services.Auth
 
         public async Task<Result<string>> GenerateOtpTokenAsync(string phoneNumber)
         {
-            if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length < 10)
-            {
-                _logger.LogError("Invalid phone number: {phoneNumber}", phoneNumber);
-                return Result.Failure<string>(DomainErrors.Authentication.InvalidPhoneNumber);
-            }
+            //if (string.IsNullOrEmpty(phoneNumber) || phoneNumber.Length < 10)
+            //{
+            //    _logger.LogError("Invalid phone number: {phoneNumber}", phoneNumber);
+            //    return Result.Failure<string>(DomainErrors.Authentication.InvalidPhoneNumber);
+            //}
 
             var user = await _userRepo.GetUserByPhoneNumber(phoneNumber);
             if (user == null)

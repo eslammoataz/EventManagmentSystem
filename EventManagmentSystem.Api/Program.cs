@@ -1,5 +1,6 @@
 using EventManagmentSystem.Application;
 using EventManagmentSystem.Application.Helpers.AuthenticationHandler;
+using EventManagmentSystem.Application.Services.EmailService;
 using EventManagmentSystem.Domain.Models;
 using EventManagmentSystem.Infrastructure;
 using EventManagmentSystem.Infrastructure.Data;
@@ -110,6 +111,17 @@ builder.Services.Configure<IdentityOptions>(options =>
     // User settings.
     options.User.RequireUniqueEmail = false;
 });
+
+// Bind Gmail settings from appsettings.json
+builder.Services.Configure<GmailSettings>(builder.Configuration.GetSection("GmailSettings"));
+
+//builder.Services.PostConfigure<GmailSettings>(gmailSettings =>
+//{
+//    gmailSettings.SmtpPassword = Environment.GetEnvironmentVariable("GmailSmtpPassword");
+//});
+
+
+builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();
 

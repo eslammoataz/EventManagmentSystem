@@ -1,4 +1,5 @@
-﻿using EventManagmentSystem.Application.Repositories;
+﻿using EventManagmentSystem.Application;
+using EventManagmentSystem.Application.Repositories;
 using EventManagmentSystem.Infrastructure.Data;
 using EventManagmentSystem.Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,11 @@ namespace EventManagmentSystem.Infrastructure
 
             // Register repositories
             services.AddScoped<IAuthRepo, AuthRepo>();
-            services.AddScoped<IUserRepo, UserRepo>();
+            services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<IOrganizationRepository, OrganizationRepository>();
+            services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IUnitOfWork, UnitOfWork>();
+
 
 
             // Register Unit of Work
