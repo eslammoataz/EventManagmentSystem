@@ -6,6 +6,7 @@ using EventManagmentSystem.Infrastructure;
 using EventManagmentSystem.Infrastructure.Data;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -124,6 +125,24 @@ builder.Services.Configure<GmailSettings>(builder.Configuration.GetSection("Gmai
 builder.Services.AddMediatR(cfg => cfg.RegisterServicesFromAssemblies(AppDomain.CurrentDomain.GetAssemblies()));
 
 var app = builder.Build();
+
+using (var scope = app.Services.CreateScope())
+{
+    var dbContext = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+    // Check if there are pending migrations
+    var pendingMigrations = dbContext.Database.GetPendingMigrations();
+
+    if (pendingMigrations.Any())
+    {
+        Console.WriteLine("Applying pending migrations...");
+        dbContext.Database.Migrate();  // Apply pending migrations
+    }
+    else
+    {
+        Console.WriteLine("No pending migrations.");
+    }
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
