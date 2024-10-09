@@ -1,8 +1,4 @@
-﻿using EventManagmentSystem.Application.Commands.OrganizationCommands.CreateOrganization;
-using EventManagmentSystem.Application.Commands.UserCommands.RegisterUser;
-using EventManagmentSystem.Application.Dto.CompleteProfileAndOrganization;
-using EventManagmentSystem.Application.Dto.User;
-using EventManagmentSystem.Application.Helpers;
+﻿using EventManagmentSystem.Application.Dto;
 using EventManagmentSystem.Application.Services.Auth;
 using EventManagmentSystem.Domain.Models;
 using MediatR;
@@ -34,9 +30,9 @@ namespace EventManagmentSystem.Api.Controllers
         /// <returns>A response containing the OTP token or an error message.</returns>
         [AllowAnonymous]
         [HttpPost("GenerateOtpToken")]
-        public async Task<IActionResult> GenerateOtpToken([FromBody] string phoneNumber)
+        public async Task<IActionResult> GenerateOtpToken([FromBody] GenerateOtpTokenDto otpTokenDto)
         {
-            var result = await _authService.GenerateOtpTokenAsync(phoneNumber);
+            var result = await _authService.GenerateOtpTokenAsync(otpTokenDto.PhoneNumber);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -53,9 +49,9 @@ namespace EventManagmentSystem.Api.Controllers
         /// <returns>A response containing an authentication token or an error message.</returns>
         [AllowAnonymous]
         [HttpPost("ValidateOtpToken")]
-        public async Task<IActionResult> ValidateOtpToken([FromBody] string otpToken, string phoneNumber)
+        public async Task<IActionResult> ValidateOtpToken([FromBody] ValidateOtpTokenDto validateOtpTokenDto)
         {
-            var result = await _authService.ValidateOtpTokenAsync(otpToken, phoneNumber);
+            var result = await _authService.ValidateOtpTokenAsync(validateOtpTokenDto.OtpToken, validateOtpTokenDto.PhoneNumber);
             if (result.IsSuccess)
             {
                 return Ok(result);
@@ -100,60 +96,60 @@ namespace EventManagmentSystem.Api.Controllers
         }
 
 
-        /// <summary>
-        /// Combines user and organization creation, handling both in one request.
-        /// </summary>
-        /// <param name="completeProfileAndOrganizationDto">The combined user and organization creation details.</param>
-        /// <returns>Returns success response with user and organization details.</returns>
-        [HttpPost("CompleteProfileAndCreateOrganization")]
-        public async Task<IActionResult> CompleteProfileAndCreateOrganization(
-            [FromBody] CompleteProfileAndOrganizationDto completeProfileAndOrganizationDto)
-        {
-            var userData = completeProfileAndOrganizationDto.User;
+        ///// <summary>
+        ///// Combines user and organization creation, handling both in one request.
+        ///// </summary>
+        ///// <param name="completeProfileAndOrganizationDto">The combined user and organization creation details.</param>
+        ///// <returns>Returns success response with user and organization details.</returns>
+        //[HttpPost("CompleteProfileAndCreateOrganization")]
+        //public async Task<IActionResult> CompleteProfileAndCreateOrganization(
+        //    [FromBody] CompleteProfileAndOrganizationDto completeProfileAndOrganizationDto)
+        //{
+        //    var userData = completeProfileAndOrganizationDto.User;
 
-            var userCommand = new CreateUserCommand
-            {
-                Name = userData.FirstName + userData.LastName,
-                Email = userData.Email,
-                PhoneNumber = userData.PhoneNumber,
-                UserName = userData.FirstName + userData.LastName
-            };
+        //    var userCommand = new CreateUserCommand
+        //    {
+        //        Name = userData.FirstName + userData.LastName,
+        //        Email = userData.Email,
+        //        PhoneNumber = userData.PhoneNumber,
+        //        UserName = userData.FirstName + userData.LastName
+        //    };
 
-            // 1. Create the user
-            var userResult = await _mediator.Send(userCommand);
+        //    // 1. Create the user
+        //    var userResult = await _mediator.Send(userCommand);
 
-            if (userResult.IsFailure)
-            {
-                return BadRequest(userResult.Error.Message);
-            }
+        //    if (userResult.IsFailure)
+        //    {
+        //        return BadRequest(userResult.Error.Message);
+        //    }
 
-            // 2. Create the organization and assign the user as admin
+        //    // 2. Create the organization and assign the user as admin
 
-            var orgData = completeProfileAndOrganizationDto.Organization;
+        //    var orgData = completeProfileAndOrganizationDto.Organization;
 
-            var createOrganizationCommand = new CreateOrganizationCommand
-            {
-                OrganizationName = orgData.Name,
-                AdminUserId = userResult.Value.UserId
-            };
+        //    var createOrganizationCommand = new CreateOrganizationCommand
+        //    {
+        //        OrganizationName = orgData.Name,
+        //        AdminUserId = userResult.Value.UserId
+        //    };
 
-            var orgResult = await _mediator.Send(createOrganizationCommand);
+        //    var orgResult = await _mediator.Send(createOrganizationCommand);
 
-            if (orgResult.IsFailure)
-            {
-                return BadRequest(orgResult.Error.Message);
-            }
+        //    if (orgResult.IsFailure)
+        //    {
+        //        return BadRequest(orgResult.Error.Message);
+        //    }
 
-            // Combine User and Organization into a single DTO
-            var combinedResult = new UserAndOrganizationDto
-            {
-                User = userResult.Value,
-                Organization = orgResult.Value
-            };
+        //    // Combine User and Organization into a single DTO
+        //    var combinedResult = new UserAndOrganizationDto
+        //    {
+        //        User = userResult.Value,
+        //        Organization = orgResult.Value
+        //    };
 
-            // Return success response with both User and Organization details
-            return Ok(Result.Success(combinedResult));
-        }
+        //    // Return success response with both User and Organization details
+        //    return Ok(Result.Success(combinedResult));
+        //}
 
     }
 }
