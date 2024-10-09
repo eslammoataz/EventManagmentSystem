@@ -76,6 +76,17 @@ builder.Services.AddSwaggerGen(c =>
     );
 });
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowAllOrigins",
+        builder =>
+        {
+            builder.AllowAnyOrigin()
+                   .AllowAnyMethod()
+                   .AllowAnyHeader();
+        });
+});
+
 
 builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
        .AddEntityFrameworkStores<ApplicationDbContext>()
@@ -155,6 +166,9 @@ if (app.Environment.IsDevelopment())
         c.RoutePrefix = string.Empty;  // Set Swagger UI to serve at the app’s root (/)
     });
 }
+
+app.UseCors("AllowAllOrigins");
+
 
 // Other middleware components
 app.UseHttpsRedirection();
