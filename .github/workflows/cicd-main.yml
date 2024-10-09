@@ -1,0 +1,22 @@
+name: Docker Image CI
+
+on:
+  push:
+    branches: ['main']
+  pull_request:
+    branches: ['main']
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.ref }}
+      - name: Docker login
+        run: |
+          echo "${{ secrets.PASSWORD_REG }}" | docker login -u "${{ secrets.USERNAME_REG }}" --password-stdin
+      - name: Build the Docker image
+        run: docker build BatahafBackend --file BatahafBackend/Dockerfile --tag ${{ vars.REGISTRY_URI }}:latest
+      - name: Push To OCI ${{vars.IMAGE_NAME}}
+        run: docker push ${{ vars.REGISTRY_URI }}:latest
