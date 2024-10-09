@@ -18,13 +18,13 @@ namespace EventManagmentSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<ApplicationUser>> GetAllAsync()
         {
-            return await _context.Users.ToListAsync();
+            return await _context.Users.Include(u => u.SocialMediaLinks).ToListAsync();
         }
 
         // Retrieve a user by their phone number
         public async Task<ApplicationUser> GetUserByPhoneNumber(string phoneNumber)
         {
-            return await _context.Users.FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
+            return await _context.Users.Include(u => u.SocialMediaLinks).FirstOrDefaultAsync(u => u.PhoneNumber == phoneNumber);
         }
 
         // Create a new user with a given phone number
@@ -46,6 +46,14 @@ namespace EventManagmentSystem.Infrastructure.Repositories
                 Value = token
             });
             await _context.SaveChangesAsync();
+        }
+
+        public async Task<string> GetUserTokenAsyncWithLoginProvider(string userId, string loginProvider)
+        {
+            var userToken = await _context.UserTokens
+                .FirstOrDefaultAsync(t => t.UserId == userId && t.LoginProvider == loginProvider && t.Name == "AuthToken");
+
+            return userToken?.Value; // Return the token value or null if not found
         }
 
         // Retrieve a user token by userId and token value
@@ -81,19 +89,25 @@ namespace EventManagmentSystem.Infrastructure.Repositories
         }
 
 
-        public async Task<ApplicationUser> GetByIdAsync(string id)
+        public async Task<ApplicationUser?> GetByIdAsync(string id)
         {
-            return await _userManager.FindByIdAsync(id);
+            return await _context.Users
+                .Include(u => u.SocialMediaLinks)
+                .FirstOrDefaultAsync(u => u.Id == id);
         }
 
-        public async Task<ApplicationUser> GetByEmailAsync(string email)
+        public async Task<ApplicationUser?> GetByEmailAsync(string email)
         {
-            return await _userManager.FindByEmailAsync(email);
+            return await _context.Users
+                .Include(u => u.SocialMediaLinks)
+                .FirstOrDefaultAsync(u => u.Email == email);
         }
 
-        public async Task<ApplicationUser> GetByUserNameAsync(string userName)
+        public async Task<ApplicationUser?> GetByUserNameAsync(string userName)
         {
-            return await _userManager.FindByNameAsync(userName);
+            return await _context.Users
+                .Include(u => u.SocialMediaLinks)
+                .FirstOrDefaultAsync(u => u.UserName == userName);
         }
 
         public async Task UpdateAsync(ApplicationUser user)

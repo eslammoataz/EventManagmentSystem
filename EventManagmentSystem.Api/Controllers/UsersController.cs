@@ -23,7 +23,7 @@ namespace EventManagmentSystem.Api.Controllers
         /// </summary>
         /// <param name="command">The details of the user to be created.</param>
         /// <returns>Returns the created user details or error message.</returns>
-        [HttpPost("Create")]
+        [HttpPost("")]
         public async Task<IActionResult> CreateUser([FromBody] CreateUserCommand command)
         {
             if (!ModelState.IsValid)
@@ -45,7 +45,7 @@ namespace EventManagmentSystem.Api.Controllers
         /// Get all users.
         /// </summary>
         /// <returns>Returns a list of all users.</returns>
-        [HttpGet("GetAll")]
+        [HttpGet("")]
         public async Task<IActionResult> GetAllUsers()
         {
             var result = await _mediator.Send(new GetAllUsersQuery());

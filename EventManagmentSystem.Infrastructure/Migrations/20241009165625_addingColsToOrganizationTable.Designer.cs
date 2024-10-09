@@ -3,6 +3,7 @@ using System;
 using EventManagmentSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EventManagmentSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241009165625_addingColsToOrganizationTable")]
+    partial class addingColsToOrganizationTable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,6 +95,10 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SocialMedia")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("State")
@@ -298,30 +305,6 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                     b.ToTable("Tickets");
                 });
 
-            modelBuilder.Entity("EventManagmentSystem.Domain.Models.UserSocialMediaLink", b =>
-                {
-                    b.Property<string>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("text");
-
-                    b.Property<int>("Platform")
-                        .HasColumnType("integer");
-
-                    b.Property<string>("Url")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("text");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("UserSocialMediaLinks");
-                });
-
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
                 {
                     b.Property<string>("Id")
@@ -485,7 +468,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                     b.HasOne("EventManagmentSystem.Domain.Models.ApplicationUser", "AdminUser")
                         .WithMany()
                         .HasForeignKey("AdminUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AdminUser");
@@ -506,8 +489,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                 {
                     b.HasOne("EventManagmentSystem.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Tickets")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("EventManagmentSystem.Domain.Models.Event", "Event")
                         .WithMany("Tickets")
@@ -518,17 +500,6 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                     b.Navigation("ApplicationUser");
 
                     b.Navigation("Event");
-                });
-
-            modelBuilder.Entity("EventManagmentSystem.Domain.Models.UserSocialMediaLink", b =>
-                {
-                    b.HasOne("EventManagmentSystem.Domain.Models.ApplicationUser", "User")
-                        .WithMany("SocialMediaLinks")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>
@@ -584,8 +555,6 @@ namespace EventManagmentSystem.Infrastructure.Migrations
 
             modelBuilder.Entity("EventManagmentSystem.Domain.Models.ApplicationUser", b =>
                 {
-                    b.Navigation("SocialMediaLinks");
-
                     b.Navigation("Tickets");
                 });
 

@@ -68,16 +68,25 @@ namespace EventManagmentSystem.Application.Services.Auth
                 return Result.Failure<string>(DomainErrors.Authentication.InvalidOtp);
             }
 
-            var token = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "LoginToken");
+            // Check if the user already has an existing "LoginToken"
+            var existingToken = await _userRepo.GetUserTokenAsyncWithLoginProvider(user.Id, "LoginToken");
 
-            if (await _userManager.GetAuthenticationTokenAsync(user, "LoginToken", token) == null)
+            if (existingToken != null)
             {
-                await _userRepo.SaveUserTokenAsync(user.Id, "LoginToken", token);
+                _logger.LogInformation("Existing token found for user {userId}: {existingToken}", user.Id, existingToken);
+                return Result.Success(existingToken);
             }
 
-            _logger.LogInformation("OTP validated successfully for user {userId}. Token: {token}", user.Id, token);
-            return Result.Success(token);
+            // No existing token found, generate a new one
+            var newToken = await _userManager.GenerateUserTokenAsync(user, TokenOptions.DefaultProvider, "LoginToken");
+
+            // Save the new token if necessary
+            await _userRepo.SaveUserTokenAsync(user.Id, "LoginToken", newToken);
+
+            _logger.LogInformation("OTP validated successfully for user {userId}. New token generated: {newToken}", user.Id, newToken);
+            return Result.Success(newToken);
         }
+
 
         public async Task<Result<string>> LogoutAsync(string tokenFromHeaders, ClaimsPrincipal userPrincipal)
         {

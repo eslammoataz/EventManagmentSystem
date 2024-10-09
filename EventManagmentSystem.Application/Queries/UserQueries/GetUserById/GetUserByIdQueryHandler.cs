@@ -27,8 +27,18 @@ namespace EventManagmentSystem.Application.Queries.UserQueries.GetUserById
             {
                 UserId = user.Id,
                 UserName = user.UserName,
+                Name = user.Name,
                 Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                PhoneNumber = user.PhoneNumber,
+                Country = user.Country,
+                State = user.State,
+                City = user.City,
+                SocialMediaLinks = user.SocialMediaLinks.Select(link => new UserSocialMediaLinkDto
+                {
+                    Id = link.Id,
+                    Platform = link.Platform,
+                    Url = link.Url
+                }).ToList()
             };
 
             return Result.Success(userDto);

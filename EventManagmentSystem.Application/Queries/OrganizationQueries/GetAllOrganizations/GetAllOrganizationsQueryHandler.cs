@@ -22,6 +22,17 @@ namespace EventManagmentSystem.Application.Queries.OrganizationQueries.GetAllOrg
             {
                 OrganizationId = org.Id,
                 OrganizationName = org.Name,
+                ManagerName = org.ManagerName,
+                City = org.City,
+                State = org.State,
+                Country = org.Country,
+                SocialMediaLinks = org.SocialMediaLinks.Select(link => new OrganizationSocialMediaLinkDto
+                {
+                    Id = link.Id,
+                    Platform = link.Platform,
+                    Url = link.Url
+                }).ToList(),
+
                 AdminUserId = org.AdminUserId
             }).ToList();
 

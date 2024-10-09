@@ -17,8 +17,17 @@ namespace EventManagmentSystem.Domain.Models
         public string AdminUserId { get; set; }
         public ApplicationUser AdminUser { get; set; }
 
+        public string Country { get; set; }
+        public string State { get; set; }
+
+        public string ManagerName { get; set; }
+        public string City { get; set; }
+
         // List of events the organization manages
         public ICollection<Event> Events { get; set; }
+
+        public ICollection<OrganizationSocialMediaLink> SocialMediaLinks { get; set; } = new List<OrganizationSocialMediaLink>();
+
     }
 
 }

@@ -20,6 +20,6 @@ namespace EventManagmentSystem.Application.Repositories
         Task<ApplicationUser> GetByUserNameAsync(string userName);
         Task UpdateAsync(ApplicationUser user);
         Task DeleteAsync(ApplicationUser user);
-
+        Task<string> GetUserTokenAsyncWithLoginProvider(string userId, string loginProvider);
     }
 }

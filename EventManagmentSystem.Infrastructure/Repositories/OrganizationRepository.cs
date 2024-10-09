@@ -18,13 +18,14 @@ namespace EventManagmentSystem.Infrastructure.Repositories
         {
             return await _context.Organizations
                                  .Include(o => o.AdminUser)
-                                 .Include(o => o.Users)
+                                 .Include(o => o.Users).Include(o => o.SocialMediaLinks)
                                  .FirstOrDefaultAsync(o => o.Id == id);
         }
 
         public async Task<Organization?> GetByAdminUserIdAsync(string adminUserId)
         {
-            return await _context.Organizations
+            return await _context.Organizations.Include(o => o.AdminUser)
+                                 .Include(o => o.Users).Include(o => o.SocialMediaLinks)
                                  .FirstOrDefaultAsync(o => o.AdminUserId == adminUserId);
         }
 
@@ -48,7 +49,7 @@ namespace EventManagmentSystem.Infrastructure.Repositories
 
         public async Task<IEnumerable<Organization>> GetAllAsync()
         {
-            return await _context.Organizations.ToListAsync();
+            return await _context.Organizations.Include(o => o.SocialMediaLinks).ToListAsync();
         }
     }
 }

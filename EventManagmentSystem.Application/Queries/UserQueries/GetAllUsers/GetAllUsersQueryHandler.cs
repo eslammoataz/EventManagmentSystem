@@ -18,13 +18,24 @@ namespace EventManagmentSystem.Application.Queries.UserQueries.GetAllUsers
         {
             var users = await _userRepository.GetAllAsync();
 
-            var userDtos = users.Select(user => new UserDto
+            var userDtos = users.Select(savedUser => new UserDto
             {
-                UserId = user.Id,
-                UserName = user.UserName,
-                Email = user.Email,
-                PhoneNumber = user.PhoneNumber
+                UserId = savedUser.Id,
+                UserName = savedUser.UserName,
+                Name = savedUser.Name,
+                Email = savedUser.Email,
+                PhoneNumber = savedUser.PhoneNumber,
+                Country = savedUser.Country,
+                State = savedUser.State,
+                City = savedUser.City,
+                SocialMediaLinks = savedUser.SocialMediaLinks.Select(link => new UserSocialMediaLinkDto
+                {
+                    Id = link.Id,
+                    Platform = link.Platform,
+                    Url = link.Url
+                }).ToList()
             }).ToList();
+
 
             return Result.Success(userDtos);
         }

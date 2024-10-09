@@ -29,9 +29,25 @@ namespace EventManagmentSystem.Application.Commands.OrganizationCommands.CreateO
 
             var organization = new Organization
             {
-                Name = request.OrganizationName,
-                AdminUserId = request.AdminUserId
+                Name = request.Name,
+                AdminUserId = request.AdminUserId,
+                ManagerName = request.ManagerName,
+                City = request.City,
+                State = request.State,
+                Country = request.Country,
             };
+
+            if (request.SocialMediaLinks != null && request.SocialMediaLinks.Any())
+            {
+                var socialMediaLinks = request.SocialMediaLinks.Select(link => new OrganizationSocialMediaLink
+                {
+                    Platform = link.Platform,
+                    Url = link.Url,
+                    Organization = organization
+                }).ToList();
+
+                organization.SocialMediaLinks = socialMediaLinks;
+            }
 
             try
             {
@@ -41,7 +57,17 @@ namespace EventManagmentSystem.Application.Commands.OrganizationCommands.CreateO
                 {
                     OrganizationId = organization.Id,
                     OrganizationName = organization.Name,
-                    AdminUserId = organization.AdminUserId
+                    AdminUserId = organization.AdminUserId,
+                    State = organization.State,
+                    Country = organization.Country,
+                    City = organization.City,
+                    ManagerName = organization.ManagerName,
+                    SocialMediaLinks = organization.SocialMediaLinks.Select(link => new OrganizationSocialMediaLinkDto
+                    {
+                        Id = link.Id,
+                        Platform = link.Platform,
+                        Url = link.Url
+                    }).ToList()
                 };
 
                 return Result.Success(organizationDto);

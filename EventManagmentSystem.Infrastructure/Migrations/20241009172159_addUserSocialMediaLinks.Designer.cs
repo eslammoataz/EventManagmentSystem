@@ -3,6 +3,7 @@ using System;
 using EventManagmentSystem.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EventManagmentSystem.Infrastructure.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241009172159_addingColsToOrganizationTable_2")]
+    partial class addUserSocialMediaLinks
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -92,6 +95,10 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                         .HasColumnType("boolean");
 
                     b.Property<string>("SecurityStamp")
+                        .HasColumnType("text");
+
+                    b.Property<string>("SocialMedia")
+                        .IsRequired()
                         .HasColumnType("text");
 
                     b.Property<string>("State")
@@ -485,7 +492,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                     b.HasOne("EventManagmentSystem.Domain.Models.ApplicationUser", "AdminUser")
                         .WithMany()
                         .HasForeignKey("AdminUserId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("AdminUser");
@@ -506,8 +513,7 @@ namespace EventManagmentSystem.Infrastructure.Migrations
                 {
                     b.HasOne("EventManagmentSystem.Domain.Models.ApplicationUser", "ApplicationUser")
                         .WithMany("Tickets")
-                        .HasForeignKey("ApplicationUserId")
-                        .OnDelete(DeleteBehavior.SetNull);
+                        .HasForeignKey("ApplicationUserId");
 
                     b.HasOne("EventManagmentSystem.Domain.Models.Event", "Event")
                         .WithMany("Tickets")
