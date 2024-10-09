@@ -76,15 +76,17 @@ builder.Services.AddSwaggerGen(c =>
     );
 });
 
+var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
+
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowAllOrigins",
-        builder =>
-        {
-            builder.AllowAnyOrigin()
-                   .AllowAnyMethod()
-                   .AllowAnyHeader();
-        });
+    options.AddPolicy(name: MyAllowSpecificOrigins,
+                      policy =>
+                      {
+                          policy.WithOrigins("http://localhost:5173/")
+                                .AllowAnyHeader()
+                                .AllowAnyMethod();
+                      });
 });
 
 
@@ -167,7 +169,7 @@ if (app.Environment.IsDevelopment())
     });
 }
 
-app.UseCors("AllowAllOrigins");
+app.UseCors(MyAllowSpecificOrigins);
 
 
 // Other middleware components
