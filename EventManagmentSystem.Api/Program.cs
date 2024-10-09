@@ -28,7 +28,7 @@ builder.Services.AddSwaggerGen(c =>
     // Optional: Customize Swagger options here
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
     {
-        Title = "Event Management API",
+        Title = "Event Management API Hosted v2",
         Version = "v1",
         Description = "API documentation for Event Management System"
     });
@@ -83,7 +83,8 @@ builder.Services.AddCors(options =>
     options.AddPolicy(name: MyAllowSpecificOrigins,
                       policy =>
                       {
-                          policy.WithOrigins("http://localhost:5173/")
+                          policy.WithOrigins("http://localhost:5173/",
+                               "http://localhost:3000")
                                 .AllowAnyHeader()
                                 .AllowAnyMethod();
                       });
@@ -164,7 +165,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI(c =>
     {
         // Serve the Swagger UI at the app’s root
-        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Management API v1");
+        c.SwaggerEndpoint("/swagger/v1/swagger.json", "Event Management API v2");
         c.RoutePrefix = string.Empty;  // Set Swagger UI to serve at the app’s root (/)
     });
 }
