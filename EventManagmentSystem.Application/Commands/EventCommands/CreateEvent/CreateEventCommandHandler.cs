@@ -52,6 +52,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Res
                 Longitude = request.Longitude,
                 Latitude = request.Latitude,
                 Status = EventStatus.Scheduled,
+                MeetingUrl = request.MeetingUrl,
             };
 
             await _unitOfWork.EventsRepository.AddAsync(newEvent);
@@ -74,6 +75,7 @@ public class CreateEventCommandHandler : IRequestHandler<CreateEventCommand, Res
                 Longitude = newEvent.Longitude,
                 Latitude = newEvent.Latitude,
                 Status = newEvent.Status.ToString(),
+                MeetingUrl = newEvent.MeetingUrl,
             };
 
             _logger.LogInformation("Event with ID {EventId} was successfully created", newEvent.Id);

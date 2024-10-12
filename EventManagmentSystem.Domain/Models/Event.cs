@@ -26,6 +26,8 @@ namespace EventManagmentSystem.Domain.Models
 
         public string Latitude { get; set; }
 
+        public string? MeetingUrl { get; set; }
+
         // Navigation property linking the event to an organization
         public string OrganizerId { get; set; }
         public Organization Organizer { get; set; }

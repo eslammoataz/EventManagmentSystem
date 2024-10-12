@@ -21,9 +21,15 @@ namespace EventManagmentSystem.Application.Commands.EventCommands.EditEvent
 
         public string? Latitude { get; set; }
 
+        public string? MeetingUrl { get; set; }
+
+        public EventStatus? Status { get; set; }
+
+
         public EditEventCommand(string eventId, string? title = null, string? description = null,
             DateTime? startDate = null, DateTime? endDate = null, EventCategory? category = null, EventType? eventType = null,
-            string? imageUrl = null, string? videoUrl = null, string? longitude = null, string? latitude = null)
+            string? imageUrl = null, string? videoUrl = null, string? longitude = null, string? latitude = null,
+            string? meetingUrl = null, EventStatus? status = null)
         {
             EventId = eventId;  // Event ID is required
             Title = title;
@@ -36,6 +42,8 @@ namespace EventManagmentSystem.Application.Commands.EventCommands.EditEvent
             VideoUrl = videoUrl;
             Longitude = longitude;
             Latitude = latitude;
+            MeetingUrl = meetingUrl;
+            Status = status;
         }
     }
 
@@ -53,5 +61,9 @@ namespace EventManagmentSystem.Application.Commands.EventCommands.EditEvent
         public string? Longitude { get; set; }
 
         public string? Latitude { get; set; }
+
+        public string? MeetingUrl { get; set; }
+        public EventStatus? Status { get; set; }
+
     }
 }

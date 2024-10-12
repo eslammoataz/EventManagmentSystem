@@ -21,6 +21,8 @@ namespace EventManagmentSystem.Application.Commands.EventCommands.CreateEvent
 
         public string Latitude { get; set; }
 
+        public string? MeetingUrl { get; set; }
+
         public string OrganizationId { get; set; } // Organization ID
         public string AdminUserId { get; set; } // The Admin User trying to create the event
     }

@@ -1,4 +1,5 @@
-﻿using EventManagmentSystem.Application.Dto.Organization;
+﻿using AutoMapper;
+using EventManagmentSystem.Application.Dto.Organization;
 using EventManagmentSystem.Application.Helpers;
 using EventManagmentSystem.Application.Repositories;
 using MediatR;
@@ -8,10 +9,12 @@ namespace EventManagmentSystem.Application.Queries.OrganizationQueries.GetOrgani
     public class GetOrganizationByIdQueryHandler : IRequestHandler<GetOrganizationByIdQuery, Result<OrganizationDto>>
     {
         private readonly IOrganizationRepository _organizationRepository;
+        private readonly IMapper _mapper;
 
-        public GetOrganizationByIdQueryHandler(IOrganizationRepository organizationRepository)
+        public GetOrganizationByIdQueryHandler(IOrganizationRepository organizationRepository, IMapper mapper)
         {
             _organizationRepository = organizationRepository;
+            _mapper = mapper;
         }
 
         public async Task<Result<OrganizationDto>> Handle(GetOrganizationByIdQuery request, CancellationToken cancellationToken)
@@ -23,22 +26,7 @@ namespace EventManagmentSystem.Application.Queries.OrganizationQueries.GetOrgani
                 return Result.Failure<OrganizationDto>(new Error("OrganizationNotFound", "The organization was not found."));
             }
 
-            var organizationDto = new OrganizationDto
-            {
-                OrganizationId = organization.Id,
-                OrganizationName = organization.Name,
-                AdminUserId = organization.AdminUserId,
-                State = organization.State,
-                Country = organization.Country,
-                City = organization.City,
-                ManagerName = organization.ManagerName,
-                SocialMediaLinks = organization.SocialMediaLinks.Select(link => new OrganizationSocialMediaLinkDto
-                {
-                    Id = link.Id,
-                    Platform = link.Platform,
-                    Url = link.Url
-                }).ToList()
-            };
+            var organizationDto = _mapper.Map<OrganizationDto>(organization);
 
             return Result.Success(organizationDto);
         }

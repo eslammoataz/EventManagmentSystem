@@ -1,4 +1,5 @@
-﻿using EventManagmentSystem.Application.Dto.Organization;
+﻿using AutoMapper;
+using EventManagmentSystem.Application.Dto.Organization;
 using EventManagmentSystem.Application.Errors;
 using EventManagmentSystem.Application.Helpers;
 using EventManagmentSystem.Application.Repositories;
@@ -11,11 +12,13 @@ namespace EventManagmentSystem.Application.Commands.OrganizationCommands.CreateO
     {
         private readonly IOrganizationRepository _organizationRepository;
         private readonly IUserRepository _userRepository;
+        private readonly IMapper _mapper;
 
-        public CreateOrganizationCommandHandler(IOrganizationRepository organizationRepository, IUserRepository userRepository)
+        public CreateOrganizationCommandHandler(IOrganizationRepository organizationRepository, IUserRepository userRepository, IMapper mapper)
         {
             _organizationRepository = organizationRepository;
             _userRepository = userRepository;
+            _mapper = mapper;
         }
 
         public async Task<Result<OrganizationDto>> Handle(CreateOrganizationCommand request, CancellationToken cancellationToken)
@@ -35,6 +38,8 @@ namespace EventManagmentSystem.Application.Commands.OrganizationCommands.CreateO
                 City = request.City,
                 State = request.State,
                 Country = request.Country,
+                Bio = request.Bio,
+                Sector = request.Sector,
             };
 
             if (request.SocialMediaLinks != null && request.SocialMediaLinks.Any())
@@ -53,22 +58,8 @@ namespace EventManagmentSystem.Application.Commands.OrganizationCommands.CreateO
             {
                 await _organizationRepository.AddAsync(organization);
 
-                var organizationDto = new OrganizationDto
-                {
-                    OrganizationId = organization.Id,
-                    OrganizationName = organization.Name,
-                    AdminUserId = organization.AdminUserId,
-                    State = organization.State,
-                    Country = organization.Country,
-                    City = organization.City,
-                    ManagerName = organization.ManagerName,
-                    SocialMediaLinks = organization.SocialMediaLinks.Select(link => new OrganizationSocialMediaLinkDto
-                    {
-                        Id = link.Id,
-                        Platform = link.Platform,
-                        Url = link.Url
-                    }).ToList()
-                };
+                var organizationDto = _mapper.Map<OrganizationDto>(organization);
+
 
                 return Result.Success(organizationDto);
             }

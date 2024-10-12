@@ -31,6 +31,7 @@ namespace EventManagmentSystem.Infrastructure
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<IOrganizationRepository, OrganizationRepository>();
             services.AddScoped<IEventRepository, EventRepository>();
+            services.AddScoped<IOtpRepository, OtpRepository>();
             services.AddScoped<IUnitOfWork, UnitOfWork>();
 
 

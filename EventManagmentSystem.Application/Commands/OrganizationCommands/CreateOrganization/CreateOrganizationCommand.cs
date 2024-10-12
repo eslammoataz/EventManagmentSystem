@@ -12,6 +12,10 @@ namespace EventManagmentSystem.Application.Commands.OrganizationCommands.CreateO
         public string City { get; set; }
         public string ManagerName { get; set; }
 
+        public string Bio { get; set; }
+
+        public string Sector { get; set; }
+
         public ICollection<CreateOrganizationSocialMediaLinkDto> SocialMediaLinks { get; set; } = new List<CreateOrganizationSocialMediaLinkDto>();
 
         public string AdminUserId { get; set; }

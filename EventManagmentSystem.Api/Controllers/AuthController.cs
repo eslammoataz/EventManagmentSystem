@@ -94,63 +94,6 @@ namespace EventManagmentSystem.Api.Controllers
             // Return the user's profile (UserName and Email in this case)
             return Ok(user);
         }
-
-
-        ///// <summary>
-        ///// Combines user and organization creation, handling both in one request.
-        ///// </summary>
-        ///// <param name="completeProfileAndOrganizationDto">The combined user and organization creation details.</param>
-        ///// <returns>Returns success response with user and organization details.</returns>
-        //[HttpPost("CompleteProfileAndCreateOrganization")]
-        //public async Task<IActionResult> CompleteProfileAndCreateOrganization(
-        //    [FromBody] CompleteProfileAndOrganizationDto completeProfileAndOrganizationDto)
-        //{
-        //    var userData = completeProfileAndOrganizationDto.User;
-
-        //    var userCommand = new CreateUserCommand
-        //    {
-        //        Name = userData.FirstName + userData.LastName,
-        //        Email = userData.Email,
-        //        PhoneNumber = userData.PhoneNumber,
-        //        UserName = userData.FirstName + userData.LastName
-        //    };
-
-        //    // 1. Create the user
-        //    var userResult = await _mediator.Send(userCommand);
-
-        //    if (userResult.IsFailure)
-        //    {
-        //        return BadRequest(userResult.Error.Message);
-        //    }
-
-        //    // 2. Create the organization and assign the user as admin
-
-        //    var orgData = completeProfileAndOrganizationDto.Organization;
-
-        //    var createOrganizationCommand = new CreateOrganizationCommand
-        //    {
-        //        OrganizationName = orgData.Name,
-        //        AdminUserId = userResult.Value.UserId
-        //    };
-
-        //    var orgResult = await _mediator.Send(createOrganizationCommand);
-
-        //    if (orgResult.IsFailure)
-        //    {
-        //        return BadRequest(orgResult.Error.Message);
-        //    }
-
-        //    // Combine User and Organization into a single DTO
-        //    var combinedResult = new UserAndOrganizationDto
-        //    {
-        //        User = userResult.Value,
-        //        Organization = orgResult.Value
-        //    };
-
-        //    // Return success response with both User and Organization details
-        //    return Ok(Result.Success(combinedResult));
-        //}
-
     }
 }
 

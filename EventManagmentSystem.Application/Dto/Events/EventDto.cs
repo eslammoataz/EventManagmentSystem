@@ -22,5 +22,7 @@
 
         public string Status { get; set; }
 
+        public string? MeetingUrl { get; set; }
+
     }
 }

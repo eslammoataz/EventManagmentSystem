@@ -11,6 +11,10 @@
         public string ManagerName { get; set; }
         public string City { get; set; }
 
+        public string Bio { get; set; }
+
+        public string Sector { get; set; }
+
         public ICollection<OrganizationSocialMediaLinkDto> SocialMediaLinks { get; set; } = new List<OrganizationSocialMediaLinkDto>();
     }
 }

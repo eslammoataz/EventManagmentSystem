@@ -16,6 +16,9 @@ namespace EventManagmentSystem.Application.Errors
         {
             public static readonly Error UserAlreadyExists = new("User.UserAlreadyExists", "A user with the specified details already exists.");
             public static readonly Error UserNotAuthorized = new("User.UserNotAuthorized", "User is not authorized to perform this action.");
+            public static readonly Error PhoneNumberAlreadyExists = new(
+                "User.PhoneNumberAlreadyExists",
+                "A user with this phone number already exists.");
         }
 
         public static class Organization

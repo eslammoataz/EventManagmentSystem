@@ -14,17 +14,20 @@ namespace EventManagmentSystem.Application.Services.Auth
         private readonly IAuthRepo _authRepo;
         private readonly IUserRepository _userRepo;
         private readonly ILogger<AuthService> _logger;
+        private readonly IOtpRepository _otpRepository;
 
         public AuthService(
             UserManager<ApplicationUser> userManager,
             IAuthRepo authRepo,
             IUserRepository userRepo,
-            ILogger<AuthService> logger)
+            ILogger<AuthService> logger,
+            IOtpRepository otpRepository)
         {
             _userManager = userManager;
             _authRepo = authRepo;
             _userRepo = userRepo;
             _logger = logger;
+            _otpRepository = otpRepository;
         }
 
         public async Task<Result<string>> GenerateOtpTokenAsync(string phoneNumber)
@@ -35,18 +38,19 @@ namespace EventManagmentSystem.Application.Services.Auth
             //    return Result.Failure<string>(DomainErrors.Authentication.InvalidPhoneNumber);
             //}
 
-            var user = await _userRepo.GetUserByPhoneNumber(phoneNumber);
-            if (user == null)
-            {
-                user = await _userRepo.CreateUserAsync(new ApplicationUser
-                {
-                    PhoneNumber = phoneNumber,
-                    Name = phoneNumber,
-                    UserName = phoneNumber,
-                });
-            }
+            var otpCode = new Random().Next(100000, 999999).ToString();
 
-            var otpCode = await _authRepo.GenerateOtpToken(phoneNumber, user);
+            var expirationTime = DateTime.UtcNow.AddMinutes(5);
+
+            var otp = new Otp
+            {
+                PhoneNumber = phoneNumber,
+                Code = otpCode,
+                Expiration = expirationTime,
+                IsUsed = false
+            };
+
+            await _otpRepository.SaveOtp(otp);
 
             _logger.LogInformation("OTP Code generated successfully for phone number {phoneNumber}", phoneNumber);
             return Result.Success(otpCode);
@@ -54,19 +58,41 @@ namespace EventManagmentSystem.Application.Services.Auth
 
         public async Task<Result<string>> ValidateOtpTokenAsync(string otpToken, string phoneNumber)
         {
-            var user = await _userRepo.GetUserByPhoneNumber(phoneNumber);
-            if (user == null)
-            {
-                _logger.LogError("User with phone number {phoneNumber} not found", phoneNumber);
-                return Result.Failure<string>(DomainErrors.Authentication.UserNotFound);
-            }
+            var otp = await _otpRepository.GetOtpByPhoneNumber(phoneNumber);
 
-            var isValidOtp = await _authRepo.ValidateOtpToken(otpToken, user);
-            if (!isValidOtp)
+            if (otp is null)
             {
                 _logger.LogError("Invalid OTP token {otpToken} for phone number {phoneNumber}", otpToken, phoneNumber);
                 return Result.Failure<string>(DomainErrors.Authentication.InvalidOtp);
             }
+
+            await _otpRepository.MarkOtpAsUsed(otp);
+
+            var user = await _userRepo.GetUserByPhoneNumber(phoneNumber);
+
+            if (user == null)
+            {
+                // Create a new user if not found
+                user = new ApplicationUser
+                {
+                    PhoneNumber = phoneNumber,
+                    UserName = phoneNumber,
+                    Name = phoneNumber,
+                    City = phoneNumber,
+                    State = phoneNumber,
+                    Country = phoneNumber,
+                };
+
+                var createResult = await _userManager.CreateAsync(user);
+                if (!createResult.Succeeded)
+                {
+                    _logger.LogError("Failed to create a user for phone number {phoneNumber}", phoneNumber);
+                    return Result.Failure<string>(DomainErrors.General.UnexpectedError);
+                }
+
+                _logger.LogInformation("User created successfully with phone number {phoneNumber}", phoneNumber);
+            }
+
 
             // Check if the user already has an existing "LoginToken"
             var existingToken = await _userRepo.GetUserTokenAsyncWithLoginProvider(user.Id, "LoginToken");

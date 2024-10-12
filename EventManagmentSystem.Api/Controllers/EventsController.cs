@@ -65,7 +65,9 @@ namespace EventManagmentSystem.Api.Controllers
                 request.ImageUrl,
                 request.VideoUrl,
                 request.Longitude,
-                request.Latitude
+                request.Latitude,
+                request.MeetingUrl,
+                request.Status
             );
 
             var result = await _mediator.Send(command);

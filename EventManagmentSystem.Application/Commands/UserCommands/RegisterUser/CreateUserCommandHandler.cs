@@ -5,6 +5,7 @@ using EventManagmentSystem.Application.Helpers;
 using EventManagmentSystem.Application.Repositories;
 using EventManagmentSystem.Domain.Models;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace EventManagmentSystem.Application.Commands.UserCommands.RegisterUser
 {
@@ -12,11 +13,13 @@ namespace EventManagmentSystem.Application.Commands.UserCommands.RegisterUser
     {
         private readonly IUserRepository _userRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper)
+        public CreateUserCommandHandler(IUserRepository userRepository, IMapper mapper, ILogger<CreateUserCommandHandler> logger)
         {
             _userRepository = userRepository;
             _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<Result<UserDto>> Handle(CreateUserCommand request, CancellationToken cancellationToken)
@@ -47,40 +50,26 @@ namespace EventManagmentSystem.Application.Commands.UserCommands.RegisterUser
 
                 if (savedUser != null)
                 {
-                    // Update the existing user's details
-                    savedUser.UserName = request.UserName;
-                    savedUser.Email = request.Email;
-                    savedUser.Name = request.Name;
-                    savedUser.PhoneNumber = request.PhoneNumber;
-                    savedUser.State = request.State;
-                    savedUser.City = request.City;
-                    savedUser.Country = request.Country;
-                    savedUser.SocialMediaLinks = socialMediaLinks;
-
-
-                    // Update the user in the repository
-                    await _userRepository.UpdateAsync(savedUser);
+                    _logger.LogInformation("Attempt to register with an existing phone number: {PhoneNumber}", request.PhoneNumber);
+                    return Result.Failure<UserDto>(DomainErrors.User.PhoneNumberAlreadyExists);
                 }
-                else
+
+                // Create a new user if none exists with the given phone number
+                var newUser = new ApplicationUser
                 {
-                    // Create a new user if none exists with the given phone number
-                    var newUser = new ApplicationUser
-                    {
-                        UserName = request.UserName,
-                        Email = request.Email,
-                        PhoneNumber = request.PhoneNumber,
-                        Name = request.Name,
-                        State = request.State,
-                        City = request.City,
-                        Country = request.Country,
-                        SocialMediaLinks = socialMediaLinks
+                    UserName = request.UserName,
+                    Email = request.Email,
+                    PhoneNumber = request.PhoneNumber,
+                    Name = request.Name,
+                    State = request.State,
+                    City = request.City,
+                    Country = request.Country,
+                    SocialMediaLinks = socialMediaLinks
+                };
 
-                    };
-
-                    // Add the new user to the repository
-                    await _userRepository.CreateUserAsync(newUser);
-                    savedUser = newUser;  // Assign the newly created user to savedUser
-                }
+                // Add the new user to the repository
+                await _userRepository.CreateUserAsync(newUser);
+                savedUser = newUser;
 
                 // Map the saved or newly updated user to UserDto
                 var userDto = new UserDto

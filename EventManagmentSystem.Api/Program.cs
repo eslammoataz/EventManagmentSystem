@@ -91,7 +91,10 @@ builder.Services.AddCors(options =>
 });
 
 
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+{
+    //options.User.RequireUniqueEmail = false;
+})
        .AddEntityFrameworkStores<ApplicationDbContext>()
        .AddDefaultTokenProviders();
 
