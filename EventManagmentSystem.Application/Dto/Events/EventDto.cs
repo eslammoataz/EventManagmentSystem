@@ -24,5 +24,9 @@
 
         public string? MeetingUrl { get; set; }
 
+        public int? TicketsNumber { get; set; }
+
+        public int? BookedTicketsNumber { get; set; }
+
     }
 }

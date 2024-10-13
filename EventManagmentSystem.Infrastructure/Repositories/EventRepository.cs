@@ -39,6 +39,7 @@ namespace EventManagmentSystem.Infrastructure.Repositories
         {
             return await _context.Events
                                  .Include(e => e.Organizer)
+                                 .Include(e => e.Tickets)
                                  .ToListAsync();
         }
     }

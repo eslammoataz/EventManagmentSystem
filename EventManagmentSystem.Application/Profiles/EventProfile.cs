@@ -14,11 +14,6 @@ namespace EventManagmentSystem.Application.Profiles
               .ForMember(dest => dest.EndDate, opt => opt.Ignore())
               .ForAllMembers(opts => opts.Condition((src, dest, srcMember) => srcMember != null));
 
-            //CreateMap<Event, EventDto>()
-            //   .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()))
-            //   .ForMember(dest => dest.OrganizationName, opt => opt.MapFrom(src => src.Organizer.Name))
-            //   .ForMember(dest => dest.OrganizationId, opt => opt.MapFrom(src => src.OrganizerId));
-
 
             CreateMap<Event, EventDto>()
             .ForMember(dest => dest.Category, opt => opt.MapFrom(src => src.Category.ToString()))
@@ -29,7 +24,10 @@ namespace EventManagmentSystem.Application.Profiles
             .ForMember(dest => dest.Latitude, opt => opt.MapFrom(src => src.Latitude))
             .ForMember(dest => dest.ImageUrl, opt => opt.MapFrom(src => src.ImageUrl))
             .ForMember(dest => dest.VideoUrl, opt => opt.MapFrom(src => src.VideoUrl))
-            .ForMember(dest => dest.MeetingUrl, opt => opt.MapFrom(src => src.MeetingUrl));
+            .ForMember(dest => dest.MeetingUrl, opt => opt.MapFrom(src => src.MeetingUrl))
+            .ForMember(dest => dest.OrganizationName, opt => opt.MapFrom(src => src.Organizer.Name))
+            .ForMember(dest => dest.TicketsNumber, opt => opt.MapFrom(src => src.Tickets.Count()))
+            .ForMember(dest => dest.BookedTicketsNumber, opt => opt.MapFrom(src => src.Tickets.Count(t => t.ApplicationUserId != null)));
 
             // Reverse mapping: Mapping from EventDto to Event entity
             CreateMap<EventDto, Event>()

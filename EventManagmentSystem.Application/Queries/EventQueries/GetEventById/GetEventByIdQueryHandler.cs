@@ -25,6 +25,7 @@ namespace EventManagmentSystem.Application.Queries.EventQueries.GetEventById
                 return Result.Failure<EventDto>(DomainErrors.Event.EventNotFound);
             }
 
+
             var eventDto = _mapper.Map<EventDto>(eventEntity);
             return Result.Success(eventDto);
         }
