@@ -1,4 +1,5 @@
-﻿using EventManagmentSystem.Application.Commands.UserCommands.DeleteUser;
+﻿using EventManagmentSystem.Application.Commands.UserCommands.CompleteUserProfile;
+using EventManagmentSystem.Application.Commands.UserCommands.DeleteUser;
 using EventManagmentSystem.Application.Commands.UserCommands.RegisterUser;
 using EventManagmentSystem.Application.Queries.UserQueries.GetAllUsers;
 using EventManagmentSystem.Application.Queries.UserQueries.GetUserById;
@@ -92,6 +93,19 @@ namespace EventManagmentSystem.Api.Controllers
             }
 
             return Ok(new { message = "User deleted successfully." });
+        }
+
+        [HttpPost("CompleteUserProfile")]
+        public async Task<IActionResult> CompleteUserProfile(CompleteUserProfileCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
         }
     }
 }
