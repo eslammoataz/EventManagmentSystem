@@ -78,9 +78,6 @@ namespace EventManagmentSystem.Application.Services.Auth
                     PhoneNumber = phoneNumber,
                     UserName = phoneNumber,
                     Name = phoneNumber,
-                    City = phoneNumber,
-                    State = phoneNumber,
-                    Country = phoneNumber,
                 };
 
                 var createResult = await _userManager.CreateAsync(user);

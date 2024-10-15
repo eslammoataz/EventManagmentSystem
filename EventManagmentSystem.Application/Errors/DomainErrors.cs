@@ -41,6 +41,8 @@ namespace EventManagmentSystem.Application.Errors
                    "Event.EventNotFound",
                    "The event was not found."
                );
+            public static readonly Error CannotEditNonDraftEvent = new("Event.CannotEditNonDraftEvent", "Cannot edit an event that is not in draft status.");
+
         }
 
 

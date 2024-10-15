@@ -20,9 +20,6 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.CreateTickets
 
         public async Task<Result<List<TicketDto>>> Handle(CreateTicketsCommand request, CancellationToken cancellationToken)
         {
-            // Start the transaction
-            await _unitOfWork.BeginTransactionAsync();
-
             try
             {
                 // Fetch the event by ID
@@ -40,14 +37,13 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.CreateTickets
                     return Result.Failure<List<TicketDto>>(DomainErrors.User.UserNotAuthorized);
                 }
 
-                // Prepare the tickets to be created in bulk
                 var tickets = new List<Ticket>();
                 for (int i = 0; i < request.Quantity; i++)
                 {
                     var ticket = new Ticket
                     {
                         EventId = request.EventId,
-                        Type = request.Type,
+                        Type = request.TypeName,
                         Price = request.Price,
                         ApplicationUserId = null,
                         IsCheckedIn = false
@@ -60,14 +56,13 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.CreateTickets
 
                 // Save changes to the database
                 await _unitOfWork.SaveAsync();
-                await _unitOfWork.CommitTransactionAsync();
 
                 // Map created tickets to TicketDto
                 var ticketDtos = tickets.Select(ticket => new TicketDto
                 {
                     Id = ticket.Id,
                     EventId = ticket.EventId,
-                    Type = ticket.Type.ToString(),
+                    Type = ticket.Type,
                     Price = ticket.Price,
                     IsCheckedIn = ticket.IsCheckedIn,
                     ApplicationUserId = ticket.ApplicationUserId
@@ -79,9 +74,6 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.CreateTickets
             catch (System.Exception ex)
             {
                 _logger.LogError(ex, "Error occurred while creating tickets for event {EventId}", request.EventId);
-
-                // Rollback transaction in case of failure
-                await _unitOfWork.RollbackTransactionAsync();
                 return Result.Failure<List<TicketDto>>(DomainErrors.General.UnexpectedError);
             }
         }

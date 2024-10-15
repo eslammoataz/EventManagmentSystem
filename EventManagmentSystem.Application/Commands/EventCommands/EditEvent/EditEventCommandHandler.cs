@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using EventManagmentSystem.Application.Errors;
 using EventManagmentSystem.Application.Helpers;
+using EventManagmentSystem.Domain.Models;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -31,6 +32,13 @@ namespace EventManagmentSystem.Application.Commands.EventCommands.EditEvent
                     _logger.LogWarning("Event with ID {EventId} not found", request.EventId);
                     await _unitOfWork.RollbackTransactionAsync();
                     return Result.Failure(DomainErrors.Event.EventNotFound);
+                }
+
+                if (eventEntity.Status != EventStatus.Draft)
+                {
+                    _logger.LogWarning("Cannot edit event with ID {EventId} that is not in draft status", request.EventId);
+                    await _unitOfWork.RollbackTransactionAsync();
+                    return Result.Failure(DomainErrors.Event.CannotEditNonDraftEvent);
                 }
 
                 _mapper.Map(request, eventEntity);

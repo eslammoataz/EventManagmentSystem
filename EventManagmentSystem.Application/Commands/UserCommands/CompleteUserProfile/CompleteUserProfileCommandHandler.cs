@@ -2,7 +2,6 @@
 using EventManagmentSystem.Application.Dto.User;
 using EventManagmentSystem.Application.Errors;
 using EventManagmentSystem.Application.Helpers;
-using EventManagmentSystem.Application.Repositories;
 using MediatR;
 using Microsoft.Extensions.Logging;
 
@@ -10,15 +9,15 @@ namespace EventManagmentSystem.Application.Commands.UserCommands.CompleteUserPro
 {
     public class UpdateUserCommandHandler : IRequestHandler<CompleteUserProfileCommand, Result<UserDto>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
         private readonly IMapper _mapper;
         private readonly ILogger _logger;
 
-        public UpdateUserCommandHandler(IUserRepository userRepository, IMapper mapper, ILogger<UpdateUserCommandHandler> logger)
+        public UpdateUserCommandHandler(IMapper mapper, ILogger<UpdateUserCommandHandler> logger, IUnitOfWork unitOfWork)
         {
-            _userRepository = userRepository;
             _mapper = mapper;
             _logger = logger;
+            _unitOfWork = unitOfWork;
         }
 
         public async Task<Result<UserDto>> Handle(CompleteUserProfileCommand request, CancellationToken cancellationToken)
@@ -26,7 +25,7 @@ namespace EventManagmentSystem.Application.Commands.UserCommands.CompleteUserPro
             try
             {
                 // Find the user by phone number
-                var existingUser = await _userRepository.GetUserByPhoneNumber(request.PhoneNumber);
+                var existingUser = await _unitOfWork.UserRepository.GetUserByPhoneNumber(request.PhoneNumber);
                 if (existingUser == null)
                 {
                     return Result.Failure<UserDto>(DomainErrors.Authentication.UserNotFound);
@@ -39,7 +38,8 @@ namespace EventManagmentSystem.Application.Commands.UserCommands.CompleteUserPro
                 existingUser.UserName = request.UserName;
                 existingUser.Email = request.Email;
 
-                await _userRepository.UpdateAsync(existingUser);
+                await _unitOfWork.UserRepository.UpdateAsync(existingUser);
+                await _unitOfWork.SaveAsync();
 
                 var userDto = _mapper.Map<UserDto>(existingUser);
 

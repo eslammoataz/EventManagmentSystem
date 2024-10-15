@@ -26,14 +26,6 @@ namespace EventManagmentSystem.Application.Commands.UserCommands.RegisterUser
         {
             try
             {
-                // Check if a user with the same email exists
-                var existingUser = await _userRepository.GetByEmailAsync(request.Email);
-                if (existingUser != null)
-                {
-                    // If a user with the provided email already exists, return a failure result
-                    return Result.Failure<UserDto>(DomainErrors.User.UserAlreadyExists);
-                }
-
                 var socialMediaLinks = new List<UserSocialMediaLink>();
 
                 if (request.SocialMediaLinks != null && request.SocialMediaLinks.Any())

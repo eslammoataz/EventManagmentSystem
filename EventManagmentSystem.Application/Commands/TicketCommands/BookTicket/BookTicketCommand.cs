@@ -1,5 +1,4 @@
 ﻿using EventManagmentSystem.Application.Helpers;
-using EventManagmentSystem.Domain.Models;
 using MediatR;
 
 namespace EventManagmentSystem.Application.Commands.TicketCommands.BookTicket
@@ -8,9 +7,9 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.BookTicket
     {
         public string EventId { get; set; }
         public string UserId { get; set; }
-        public TicketType TicketType { get; set; }
+        public string TicketType { get; set; }
 
-        public BookTicketCommand(string eventId, string userId, TicketType ticketType)
+        public BookTicketCommand(string eventId, string userId, string ticketType)
         {
             EventId = eventId;
             UserId = userId;
@@ -22,6 +21,6 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.BookTicket
     {
         public required string EventId { get; set; }
         public required string UserId { get; set; }
-        public required TicketType TicketType { get; set; }
+        public required string TicketType { get; set; }
     }
 }

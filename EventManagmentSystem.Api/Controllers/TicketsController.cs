@@ -35,7 +35,7 @@ namespace EventManagmentSystem.Api.Controllers
             {
                 EventId = request.EventId,
                 AdminUserId = request.AdminUserId,
-                Type = request.Type,
+                TypeName = request.Type,
                 Price = request.Price,
                 Quantity = request.Quantity
             };

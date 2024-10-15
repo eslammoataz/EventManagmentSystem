@@ -35,6 +35,7 @@ namespace EventManagmentSystem.Domain.Models
         // Event details
         public ICollection<Ticket> Tickets { get; set; }
         public EventStatus Status { get; set; }
+
     }
 
     public enum EventCategory
@@ -53,10 +54,8 @@ namespace EventManagmentSystem.Domain.Models
     }
     public enum EventStatus
     {
-        Scheduled,
-        Ongoing,
-        Completed,
-        Cancelled
+        Draft,
+        Published
     }
 
 

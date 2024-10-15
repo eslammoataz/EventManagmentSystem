@@ -16,7 +16,7 @@ namespace EventManagmentSystem.Domain.Models
         public ApplicationUser? ApplicationUser { get; set; }  // Navigation property
 
         // Use the enum for TicketType
-        public TicketType Type { get; set; }  // Ticket type (VIP, Regular, Student, etc.)
+        public string Type { get; set; }  // Ticket type (VIP, Regular, Student, etc.)
 
         public decimal Price { get; set; }
         public bool IsCheckedIn { get; set; } = false;  // Check-in status

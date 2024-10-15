@@ -20,12 +20,30 @@ namespace EventManagmentSystem.Api.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> CreateEvent([FromBody] CreateEventCommand command)
+        public async Task<IActionResult> CreateEvent([FromBody] CreateEventRequest request)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
+
+            var command = new CreateEventCommand
+            {
+                Title = request.Title,
+                Description = request.Description,
+                StartDate = request.StartDate,
+                EndDate = request.EndDate,
+                Category = request.Category,
+                EventType = request.EventType,
+                ImageUrl = request.ImageUrl,
+                VideoUrl = request.VideoUrl,
+                Longitude = request.Longitude,
+                Latitude = request.Latitude,
+                MeetingUrl = request.MeetingUrl,
+                OrganizationId = request.OrganizationId,
+                AdminUserId = request.AdminUserId,
+                Tickets = request.Tickets
+            };
 
             var result = await _mediator.Send(command);
 

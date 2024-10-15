@@ -1,6 +1,5 @@
 ﻿using EventManagmentSystem.Application.Dto.Tickets;
 using EventManagmentSystem.Application.Helpers;
-using EventManagmentSystem.Domain.Models;
 using MediatR;
 
 namespace EventManagmentSystem.Application.Commands.TicketCommands.CreateTicketsForEvent
@@ -9,7 +8,7 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.CreateTickets
     {
         public string EventId { get; set; }
         public string AdminUserId { get; set; }
-        public TicketType Type { get; set; }
+        public string TypeName { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
     }
@@ -18,7 +17,7 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.CreateTickets
     {
         public string EventId { get; set; }
         public string AdminUserId { get; set; }
-        public TicketType Type { get; set; }
+        public string Type { get; set; }
         public decimal Price { get; set; }
         public int Quantity { get; set; }
     }
