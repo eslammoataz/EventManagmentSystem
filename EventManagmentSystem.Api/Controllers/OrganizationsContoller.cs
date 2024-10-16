@@ -156,16 +156,18 @@ namespace EventManagmentSystem.Api.Controllers
         }
 
         [HttpGet("GetOrganizationByAdminId/{adminId}")]
-        public async Task<IActionResult> GetOrganizationByAdminId(GetOrganizationByAdminIdRequest request)
+        public async Task<IActionResult> GetOrganizationByAdminId(string adminId)
         {
-            var query = new GetOrganizationByAdminIdQuery { AdminId = request.AdminId };
+            var query = new GetOrganizationByAdminIdQuery { AdminId = adminId };
             var result = await _mediator.Send(query);
 
             if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
+
             return Ok(result);
         }
+
     }
 }
