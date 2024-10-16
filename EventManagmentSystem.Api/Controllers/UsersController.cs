@@ -3,7 +3,11 @@ using EventManagmentSystem.Application.Commands.UserCommands.DeleteUser;
 using EventManagmentSystem.Application.Commands.UserCommands.RegisterUser;
 using EventManagmentSystem.Application.Queries.UserQueries.GetAllUsers;
 using EventManagmentSystem.Application.Queries.UserQueries.GetUserById;
+using EventManagmentSystem.Application.Queries.UserQueries.GetUserProfile;
+using EventManagmentSystem.Domain.Models;
 using MediatR;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
 namespace EventManagmentSystem.Api.Controllers
@@ -13,10 +17,12 @@ namespace EventManagmentSystem.Api.Controllers
     public class UsersController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly UserManager<ApplicationUser> _userManager;
 
-        public UsersController(IMediator mediator)
+        public UsersController(IMediator mediator, UserManager<ApplicationUser> userManager)
         {
             _mediator = mediator;
+            _userManager = userManager;
         }
 
         /// <summary>
@@ -107,5 +113,25 @@ namespace EventManagmentSystem.Api.Controllers
 
             return Ok(result);
         }
+
+        [HttpGet("GetUserProfile")]
+        [Authorize(AuthenticationSchemes = "CustomToken")]
+        public async Task<IActionResult> GetUserProfile()
+        {
+            var user = await _userManager.GetUserAsync(User);
+
+            var userId = user.Id;
+
+            var query = new GetUserProfileQuery(userId);
+            var result = await _mediator.Send(query);
+
+            if (!result.IsSuccess)
+            {
+                return NotFound(result.Error);
+            }
+
+            return Ok(result.Value);
+        }
+
     }
 }

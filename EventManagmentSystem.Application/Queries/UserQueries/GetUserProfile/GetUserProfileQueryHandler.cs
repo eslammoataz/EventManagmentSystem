@@ -1,23 +1,25 @@
-﻿using EventManagmentSystem.Application.Dto.User;
+﻿using AutoMapper;
+using EventManagmentSystem.Application.Dto.User;
 using EventManagmentSystem.Application.Errors;
 using EventManagmentSystem.Application.Helpers;
-using EventManagmentSystem.Application.Repositories;
 using MediatR;
 
-namespace EventManagmentSystem.Application.Queries.UserQueries.GetUserById
+namespace EventManagmentSystem.Application.Queries.UserQueries.GetUserProfile
 {
-    public class GetUserByIdQueryHandler : IRequestHandler<GetUserByIdQuery, Result<UserDto>>
+    public class GetUserProfileQueryHandler : IRequestHandler<GetUserProfileQuery, Result<UserDto>>
     {
-        private readonly IUserRepository _userRepository;
+        private readonly IUnitOfWork _unitOfWork;
+        private readonly IMapper _mapper;
 
-        public GetUserByIdQueryHandler(IUserRepository userRepository)
+        public GetUserProfileQueryHandler(IUnitOfWork unitOfWork, IMapper mapper)
         {
-            _userRepository = userRepository;
+            _unitOfWork = unitOfWork;
+            _mapper = mapper;
         }
 
-        public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
+        public async Task<Result<UserDto>> Handle(GetUserProfileQuery request, CancellationToken cancellationToken)
         {
-            var user = await _userRepository.GetByIdAsync(request.Id);
+            var user = await _unitOfWork.UserRepository.GetByIdAsync(request.UserId);
 
             if (user == null)
             {
