@@ -61,7 +61,7 @@ namespace EventManagmentSystem.Api.Controllers
                 return BadRequest(result);
             }
 
-            return Ok(result.Value);
+            return Ok(result);
         }
 
 
@@ -161,10 +161,10 @@ namespace EventManagmentSystem.Api.Controllers
 
             if (result.IsFailure)
             {
-                return BadRequest(new { error = result.Error.Message });
+                return BadRequest(result);
             }
 
-            return Ok(result.Value);
+            return Ok(result);
         }
 
 

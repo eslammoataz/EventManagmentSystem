@@ -72,10 +72,10 @@ namespace EventManagmentSystem.Api.Controllers
 
             if (result.IsSuccess)
             {
-                return Ok(result.Value);
+                return Ok(result);
             }
 
-            return BadRequest(result.Error.Message);
+            return BadRequest(result);
         }
     }
 }

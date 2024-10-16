@@ -42,10 +42,10 @@ namespace EventManagmentSystem.Api.Controllers
 
             if (result.IsFailure)
             {
-                return BadRequest(result.Error.Message);
+                return BadRequest(result);
             }
 
-            return Ok(result.Value);
+            return Ok(result);
         }
 
         /// <summary>
@@ -59,10 +59,10 @@ namespace EventManagmentSystem.Api.Controllers
 
             if (result.IsFailure)
             {
-                return BadRequest(result.Error.Message);
+                return BadRequest(result);
             }
 
-            return Ok(result.Value);
+            return Ok(result);
         }
 
         /// <summary>
@@ -77,10 +77,10 @@ namespace EventManagmentSystem.Api.Controllers
 
             if (result.IsFailure)
             {
-                return NotFound(result.Error.Message);
+                return NotFound(result);
             }
 
-            return Ok(result.Value);
+            return Ok(result);
         }
 
         /// <summary>
@@ -127,10 +127,10 @@ namespace EventManagmentSystem.Api.Controllers
 
             if (!result.IsSuccess)
             {
-                return NotFound(result.Error);
+                return NotFound(result);
             }
 
-            return Ok(result.Value);
+            return Ok(result);
         }
 
     }
