@@ -77,23 +77,6 @@ namespace EventManagmentSystem.Api.Controllers
 
             return BadRequest(result.Error.Message);
         }
-
-        [Authorize(AuthenticationSchemes = "CustomToken")]
-        [HttpGet("profile")]
-        public async Task<IActionResult> GetUserProfile()
-        {
-            // Get the authenticated user using UserManager
-            var user = await _userManager.GetUserAsync(User);
-
-            // If the user is not found, return Unauthorized
-            if (user == null)
-            {
-                return Unauthorized();
-            }
-
-            // Return the user's profile (UserName and Email in this case)
-            return Ok(user);
-        }
     }
 }
 

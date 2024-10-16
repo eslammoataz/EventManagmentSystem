@@ -3,6 +3,7 @@ using EventManagmentSystem.Application.Commands.OrganizationCommands.CreateOrgan
 using EventManagmentSystem.Application.Commands.OrganizationCommands.DeleteOrganization;
 using EventManagmentSystem.Application.Commands.OrganizationCommands.RemoveUsersFromOrganization;
 using EventManagmentSystem.Application.Queries.OrganizationQueries.GetAllOrganizations;
+using EventManagmentSystem.Application.Queries.OrganizationQueries.GetOrganizationByAdminId;
 using EventManagmentSystem.Application.Queries.OrganizationQueries.GetOrganizationById;
 using EventManagmentSystem.Application.Queries.OrganizationQueries.GetUsersByOrganization;
 using MediatR;
@@ -151,6 +152,19 @@ namespace EventManagmentSystem.Api.Controllers
                 return BadRequest(result);
             }
 
+            return Ok(result);
+        }
+
+        [HttpGet("GetOrganizationByAdminId/{adminId}")]
+        public async Task<IActionResult> GetOrganizationByAdminId(GetOrganizationByAdminIdRequest request)
+        {
+            var query = new GetOrganizationByAdminIdQuery { AdminId = request.AdminId };
+            var result = await _mediator.Send(query);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result);
+            }
             return Ok(result);
         }
     }
