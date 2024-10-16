@@ -1,4 +1,7 @@
-﻿namespace EventManagmentSystem.Domain.Models
+﻿using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
+
+namespace EventManagmentSystem.Domain.Models
 {
     public class Event
     {
