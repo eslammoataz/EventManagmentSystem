@@ -22,7 +22,6 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.SendTicketAsG
 
         public async Task<Result<TicketDto>> Handle(SendTicketAsGiftCommand request, CancellationToken cancellationToken)
         {
-
             var ticket = await _unitOfWork.TicketsRepository.GetByIdAsync(request.TicketId);
 
             if (ticket == null)
@@ -31,10 +30,14 @@ namespace EventManagmentSystem.Application.Commands.TicketCommands.SendTicketAsG
                 return Result.Failure<TicketDto>(DomainErrors.Ticket.TicketNotFound);
             }
 
+            var eventDetails = await _unitOfWork.EventsRepository.GetByIdAsync(ticket.EventId);
 
-            if (ticket.ApplicationUserId != request.SenderUserId)
+            bool isTicketOwner = ticket.ApplicationUserId == request.SenderUserId;
+            bool isEventAdmin = eventDetails.Organizer.AdminUserId == request.SenderUserId;
+
+            if (!isTicketOwner && !isEventAdmin)
             {
-                _logger.LogWarning("User {SenderUserId} does not own the ticket with ID {TicketId}", request.SenderUserId, request.TicketId);
+                _logger.LogWarning("User {SenderUserId} is not authorized to gift the ticket with ID {TicketId}", request.SenderUserId, request.TicketId);
                 return Result.Failure<TicketDto>(DomainErrors.Ticket.SenderDoesNotOwnTicket);
             }
 

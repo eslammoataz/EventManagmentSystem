@@ -3,6 +3,7 @@ using EventManagmentSystem.Application.Commands.UserCommands.DeleteUser;
 using EventManagmentSystem.Application.Commands.UserCommands.RegisterUser;
 using EventManagmentSystem.Application.Queries.UserQueries.GetAllUsers;
 using EventManagmentSystem.Application.Queries.UserQueries.GetUserById;
+using EventManagmentSystem.Application.Queries.UserQueries.GetUserByPhoneNumber;
 using EventManagmentSystem.Application.Queries.UserQueries.GetUserProfile;
 using EventManagmentSystem.Domain.Models;
 using MediatR;
@@ -133,5 +134,23 @@ namespace EventManagmentSystem.Api.Controllers
             return Ok(result);
         }
 
+        [HttpGet("GetUserByPhoneNumber")]
+        public async Task<IActionResult> GetUserByPhoneNumber([FromQuery] string phoneNumber)
+        {
+            if (string.IsNullOrWhiteSpace(phoneNumber))
+            {
+                return BadRequest("Phone number is required.");
+            }
+
+            var query = new GetUserByPhoneNumberQuery(phoneNumber);
+            var result = await _mediator.Send(query);
+
+            if (result.IsFailure)
+            {
+                return NotFound(result);
+            }
+
+            return Ok(result);
+        }
     }
 }

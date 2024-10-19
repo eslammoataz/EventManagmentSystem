@@ -4,6 +4,7 @@ using EventManagmentSystem.Application.Commands.TicketCommands.CreateTicketsForE
 using EventManagmentSystem.Application.Commands.TicketCommands.DeleteTickets;
 using EventManagmentSystem.Application.Commands.TicketCommands.GenerateTicketQRCode;
 using EventManagmentSystem.Application.Commands.TicketCommands.SendTicketAsGift;
+using EventManagmentSystem.Application.Queries.TicketQueries.GetTicketById;
 using EventManagmentSystem.Application.Queries.TicketQueries.GetTicketsByEvent;
 using EventManagmentSystem.Application.Queries.TicketQueries.GetUserTickets;
 using MediatR;
@@ -160,6 +161,20 @@ namespace EventManagmentSystem.Api.Controllers
             var result = await _mediator.Send(command);
 
             if (result.IsFailure)
+            {
+                return BadRequest(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("{ticketId}")]
+        public async Task<IActionResult> GetTicketById(string ticketId)
+        {
+            var query = new GetTicketByIdQuery(ticketId);
+            var result = await _mediator.Send(query);
+
+            if (!result.IsSuccess)
             {
                 return BadRequest(result);
             }
