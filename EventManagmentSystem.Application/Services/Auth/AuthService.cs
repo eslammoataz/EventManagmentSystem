@@ -60,7 +60,7 @@ namespace EventManagmentSystem.Application.Services.Auth
         {
             var otp = await _otpRepository.GetOtpByPhoneNumber(phoneNumber);
 
-            if (otp is null)
+            if (otp is null || otp.IsUsed || otp.Expiration < DateTime.UtcNow || otp.Code != otpToken)
             {
                 _logger.LogError("Invalid OTP token {otpToken} for phone number {phoneNumber}", otpToken, phoneNumber);
                 return Result.Failure<string>(DomainErrors.Authentication.InvalidOtp);
