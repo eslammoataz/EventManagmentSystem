@@ -44,7 +44,9 @@ namespace EventManagmentSystem.Application.Queries.TicketQueries.GetTicketsByEve
                 Type = ticket.Type.ToString(),
                 Price = ticket.Price,
                 IsCheckedIn = ticket.IsCheckedIn,
-                ApplicationUserId = ticket.ApplicationUserId
+                ApplicationUserId = ticket.ApplicationUserId,
+                isGift = ticket.isGift,
+                TicketSenderUserId = ticket.ticketSender
             }).ToList();
 
             return Result.Success(ticketDtos);

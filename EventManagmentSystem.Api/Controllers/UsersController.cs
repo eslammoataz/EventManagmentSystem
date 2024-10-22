@@ -1,6 +1,7 @@
 ﻿using EventManagmentSystem.Application.Commands.UserCommands.CompleteUserProfile;
 using EventManagmentSystem.Application.Commands.UserCommands.DeleteUser;
 using EventManagmentSystem.Application.Commands.UserCommands.RegisterUser;
+using EventManagmentSystem.Application.Commands.UserCommands.UpdateUser;
 using EventManagmentSystem.Application.Queries.UserQueries.GetAllUsers;
 using EventManagmentSystem.Application.Queries.UserQueries.GetUserById;
 using EventManagmentSystem.Application.Queries.UserQueries.GetUserByPhoneNumber;
@@ -148,6 +149,19 @@ namespace EventManagmentSystem.Api.Controllers
             if (result.IsFailure)
             {
                 return NotFound(result);
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPut()]
+        public async Task<IActionResult> UpdateUser(UpdateUserCommand command)
+        {
+            var result = await _mediator.Send(command);
+
+            if (result.IsFailure)
+            {
+                return BadRequest(result);
             }
 
             return Ok(result);

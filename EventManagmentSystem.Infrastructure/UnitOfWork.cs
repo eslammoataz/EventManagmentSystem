@@ -1,10 +1,10 @@
-﻿using EventManagmentSystem.Application;
-using EventManagmentSystem.Application.Repositories;
+﻿using EventManagmentSystem.Application.Repositories;
 using EventManagmentSystem.Domain.Models;
 using EventManagmentSystem.Infrastructure.Data;
 using EventManagmentSystem.Infrastructure.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore.Storage;
+using EventManagmentSystem.Application;
 
 namespace EventManagmentSystem.Infrastructure
 {
